@@ -14,8 +14,7 @@ class Solution:
         self.solution = []
 
     def solve(self):
-        for i, sequence in enumerate(self.challenge):
-            # print(i, sequence)
+        for sequence in self.challenge:
             decoded = self.decode(sequence)
             self.solution.append(decoded)
         return self.solution
@@ -40,25 +39,26 @@ class Solution:
     
     def process_token(self, prev, curr):
         new_curr = ""
+        new_prev = prev
         for char in curr:
             if char in self.MACROS:
-                prev, new_curr = self.MACROS[char](self)(prev, new_curr)
+                new_prev, new_curr = self.MACROS[char](self)(prev, new_prev, new_curr)
             else:
                 new_curr += char
-        return prev, new_curr
+        return new_prev, new_curr
     
     def get_tokens(self, sequence: str):
         return sequence.split("#")[1:-1]
 
-    def repeat(self, prev, curr):
-        return prev, curr + prev
+    def repeat(self, old_prev, curr_prev, curr):
+        return curr_prev, curr + old_prev
 
-    def reverse(self, prev, curr):
-        return prev[::-1], curr
+    def reverse(self, old_prev, curr_prev, curr):
+        return curr_prev[::-1], curr
     
-    def encrypt(self, prev, curr):
+    def encrypt(self, old_prev, curr_prev, curr):
         new_prev = ""
-        for char in prev:
+        for char in curr_prev:
             doubled = int(char) * 2
             new_char = str(doubled)[-1]
             new_prev += new_char
@@ -68,22 +68,9 @@ class Solution:
 
 def main():
     data = Utils.load_challenge()
-    token, challenge = data['token'], data['challenge']
-    print(challenge[0:5])
+    challenge = data['challenge']
     solver = Solution(challenge)
-    # print(solver.get_tokens("#12#34!#59^#67%#"))
-    # print(solver.decode("#12#34!#59^#67%#"))
     solution = solver.solve()
-    print(solution[0:5])
-    # APIMethods.submit_solution(solution)
-
-    print(solver.decode("#1%8%2^0^0!757%140#58#13641%9^7%8%4^755#30!87!79^1#2^1^9!64!5212!93!9#031#") == "182007571400455748791463130136419784755871364197847557912193013641978475587136419784755791643013641978475587136419784755791521230136419784755871364197847557919330136419784755871364197847557919031")
-
-    print(solver.decode("#01#9999!^!%!%!%!9999^#"))
-    print(solver.decode("##"))
-    print(solver.decode("#0%#1%#2%#3%#4%#5%#6%#7%#8%#9%#"))
-    print(solver.decode("###%#!!!#0987#"))
-
-    print("hi")
+    APIMethods.submit_solution(solution)
 
 main()
