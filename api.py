@@ -5,6 +5,7 @@ BASE_URL = "https://generate-coding-challenge-server-rellb.ondigitalocean.app"
 NAME = "Jonathan Chen"
 NUID = "002131787"
 
+# Class for API methods 
 class APIMethods:
     @staticmethod
     def register():

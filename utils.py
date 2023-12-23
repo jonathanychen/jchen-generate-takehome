@@ -1,5 +1,6 @@
 import json
 
+# Utility class for loading and writing challenge files
 class Utils:
     @staticmethod
     def load_challenge() -> dict:
